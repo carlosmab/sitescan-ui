@@ -4,7 +4,9 @@ from pydantic import BaseModel, EmailStr
 
 class User(BaseModel):
     id: Optional[UUID] = None
+    password: str = ""
     email: EmailStr
-    password: str
+    is_active: bool = False
+    
 
     
