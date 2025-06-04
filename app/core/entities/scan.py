@@ -11,7 +11,7 @@ class ScrapResult(BaseModel):
 
 class AnalysisResult(BaseModel):
     summary: str
-    frequent_words: List[str]
+    tags: List[str]
 
 
 class Scan(BaseModel):

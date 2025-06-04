@@ -3,7 +3,7 @@ from unittest.mock import AsyncMock
 from uuid import uuid4
 import pytest
 
-from app.core.entities.scan import Scan, ScrapResult
+from app.core.entities.scan import AnalysisResult, Scan, ScrapResult
 from app.core.entities.user import User
 from app.repositories.scan import fetch_scans_by_user_id, fetch_scan_by_id, insert_scan, update_scrap_result, update_analysis_result
 
@@ -115,7 +115,7 @@ async def test_update_scrap_results(mocker, mock_db, mock_scan, mock_user):
 
     mocker.patch("app.repositories.scan.get_db", return_value = mock_db)
 
-    await update_scrap_result(mock_scan.id, ScrapResult(title="test title",content="this is the content"))  
+    await update_scrap_result(mock_scan.id, ScrapResult(title="test title", content="this is the content"))  
 
     mock_db.execute.assert_awaited_once()
 
@@ -127,6 +127,6 @@ async def test_update_analysis_results(mocker, mock_db, mock_scan):
 
     mocker.patch("app.repositories.scan.get_db", return_value = mock_db)
 
-    await update_scrap_result(mock_scan.id, ScrapResult(title="test title",content="this is the content"))  
+    await update_analysis_result(mock_scan.id, AnalysisResult(summary="test title", tags=[]))  
 
     mock_db.execute.assert_awaited_once()
