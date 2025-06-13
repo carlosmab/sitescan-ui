@@ -17,4 +17,6 @@ class Settings(BaseSettings):
     db_max_size: int = 20
     db_timeout: float = 10.0
 
-settings = Settings()
+
+def get_settings():
+    return Settings()

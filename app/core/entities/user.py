@@ -6,7 +6,6 @@ class User(BaseModel):
     id: Optional[UUID] = None
     password: str = ""
     email: EmailStr
-    is_active: bool = False
     
 
     
