@@ -46,7 +46,7 @@ FETCH_SCANS_BY_ID = """
 """
 
 
-UPDATE_SCRAP_RESULT = """
+UPDATE_SCRAPE_RESULT = """
     UPDATE
         scans
     SET

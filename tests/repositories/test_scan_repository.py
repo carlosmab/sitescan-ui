@@ -1,11 +1,13 @@
 from datetime import datetime
+import json
 from unittest.mock import AsyncMock
 from uuid import uuid4
 import pytest
 
-from app.core.entities.scan import AnalysisResult, Scan, ScrapResult
+from app.core.entities.scan import AnalysisResult, Scan, ScrapeResult
 from app.core.entities.user import User
-from app.repositories.scan import fetch_scans_by_user_id, fetch_scan_by_id, insert_scan, update_scrap_result, update_analysis_result
+from app.repositories.scan import fetch_scans_by_user_id, fetch_scan_by_id, insert_scan, update_scrape_result, update_analysis_result
+from app.sql.scan import UPDATE_ANALYSIS_RESULT, UPDATE_SCRAPE_RESULT
 
 
 @pytest.fixture
@@ -98,35 +100,33 @@ async def test_fetch_scans_by_user_id(mocker, mock_db, mock_scan, mock_user):
 
 
 @pytest.mark.asyncio
-async def test_update_scrap_results(mocker, mock_db, mock_scan, mock_user):
-    mock_db.execute.return_value = {
-        "id": uuid4(),
-        "url": "www.test.scan",
-        "user_id": mock_user.id,
-        "created_at": datetime.now(),
-        "scrap_result": {
-            "title": "test title",
-            "content": "this is the content"
-        },
-        "scrapped_at": datetime.now(),
-        "analysis_result": None,
-        "analyzed_at": None,
-    } # Not needed here
-
+async def test_update_scraped_results(mocker, mock_db, mock_scan, mock_user):
     mocker.patch("app.repositories.scan.get_db", return_value = mock_db)
 
-    await update_scrap_result(mock_scan.id, ScrapResult(title="test title", content="this is the content"))  
+    scrape_result = ScrapeResult(title="test title", content="this is the content")
+    await update_scrape_result(mock_scan.id, scrape_result)  
 
-    mock_db.execute.assert_awaited_once()
+    mock_db.execute.assert_awaited_once_with(
+        UPDATE_SCRAPE_RESULT,
+        {
+            "id": str(mock_scan.id),
+            "scrape_result_json": scrape_result.model_dump_json()
+        }
+    )
 
 
 
 @pytest.mark.asyncio
 async def test_update_analysis_results(mocker, mock_db, mock_scan):
-    mock_db.execute.return_value = {}
-
     mocker.patch("app.repositories.scan.get_db", return_value = mock_db)
 
-    await update_analysis_result(mock_scan.id, AnalysisResult(summary="test title", tags=[]))  
+    analysis_result = AnalysisResult(summary="test title", tags=["web"])
+    await update_analysis_result(mock_scan.id, analysis_result)  
 
-    mock_db.execute.assert_awaited_once()
+    mock_db.execute.assert_awaited_once_with(
+        UPDATE_ANALYSIS_RESULT,
+        {
+            "id": str(mock_scan.id),
+            "analysis_result_json": analysis_result.model_dump_json()
+        }
+    )

@@ -1,7 +1,7 @@
 from uuid import UUID
-from app.core.entities.scan import AnalysisResult, Scan, ScrapResult
+from app.core.entities.scan import AnalysisResult, Scan, ScrapeResult
 from app.db import get_db
-from app.sql.scan import FETCH_SCANS_BY_ID, FETCH_SCANS_BY_USER_ID, INSERT_SCAN, UPDATE_ANALYSIS_RESULT, UPDATE_SCRAP_RESULT
+from app.sql.scan import FETCH_SCANS_BY_ID, FETCH_SCANS_BY_USER_ID, INSERT_SCAN, UPDATE_ANALYSIS_RESULT, UPDATE_SCRAPE_RESULT
 
 
 
@@ -20,9 +20,9 @@ async def fetch_scan_by_id(id: UUID) -> Scan | None:
     return Scan.model_validate(result) if result else None
 
 
-async def update_scrap_result(id: UUID, scrap_result: ScrapResult) -> None:
-    await get_db().execute(UPDATE_SCRAP_RESULT, {"id": id, "scrap_result": scrap_result.model_dump_json}) 
+async def update_scrape_result(scan_id: UUID, scrape_result: ScrapeResult) -> None:
+    await get_db().execute(UPDATE_SCRAPE_RESULT, {"id": str(scan_id), "scrape_result_json": scrape_result.model_dump_json()}) 
 
 
-async def update_analysis_result(id: UUID, analysis_result: AnalysisResult) -> None:
-    await get_db().execute(UPDATE_ANALYSIS_RESULT, {"id": id, "Analysis_result": analysis_result.model_dump_json}) 
+async def update_analysis_result(scan_id: UUID, analysis_result: AnalysisResult) -> None:
+    await get_db().execute(UPDATE_ANALYSIS_RESULT, {"id": str(scan_id), "analysis_result_json": analysis_result.model_dump_json()}) 

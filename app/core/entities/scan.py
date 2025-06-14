@@ -4,7 +4,7 @@ from uuid import UUID
 from pydantic import BaseModel
 
 
-class ScrapResult(BaseModel):
+class ScrapeResult(BaseModel):
     title: str
     content: str
 
@@ -19,8 +19,8 @@ class Scan(BaseModel):
     user_id: UUID
     url: str
     created_at: datetime
-    scrap_result: Optional[ScrapResult] = None
-    scrapped_at: Optional[datetime] = None
+    scrape_result: Optional[ScrapeResult] = None
+    scraped_at: Optional[datetime] = None
     analysis_result: Optional[AnalysisResult] = None
     analyzed_at: Optional[datetime] = None
 
