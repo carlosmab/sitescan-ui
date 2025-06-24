@@ -1,3 +1,4 @@
+from functools import lru_cache
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
@@ -11,12 +12,17 @@ class Settings(BaseSettings):
         env_nested_delimiter="__",
         env_nested_max_split=1,
     )
+    
+    SECRET_KEY: str = "dev-secret"
+    DEBUG: bool = True
+    WTF_CSRF_ENABLED: bool = True
 
-    database_url: str = "postgresql+asyncpg://postgres:password@localhost:5432/mydb"
-    db_min_size: int = 5
-    db_max_size: int = 20
-    db_timeout: float = 10.0
+    DATABASE_URL: str = "postgresql+asyncpg://postgres:password@localhost:5432/mydb"
+    DB_POOL_MIN_SIZE: int = 5
+    DB_POOL_MAX_SIZE: int = 20
+    DB_TIMEOUT: float = 10.0
 
 
+@lru_cache
 def get_settings():
     return Settings()

@@ -8,8 +8,8 @@ auth_bp = Blueprint(
     name="auth",
     url_prefix="/auth", 
     import_name=__name__,
-    template_folder="../../templates",
-    static_folder="../../static"
+    template_folder="../templates",
+    static_folder="static"
 )
 
 @auth_bp.route("/login", methods=["GET"])
